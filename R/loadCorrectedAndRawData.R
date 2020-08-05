@@ -17,5 +17,6 @@ loadCorrectedAndRawData <- function(level2_path, plot_name, sub_plot_name) {
         filter(stringr::str_detect(variable, "^[0-9]{2}_FDR")) %>%
         filter(!is.na(value))
 
-    rbindlist(list(al_corrected_data, raw_data), use.names = TRUE, fill = TRUE)
+    rbindlist(list(al_corrected_data, raw_data), use.names = TRUE, fill = TRUE) %>%
+        mutate(variable = stringr::str_match(as.character(variable), "[0-9]{2}"))
 }
