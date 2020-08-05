@@ -10,7 +10,7 @@ License: What license is it under?
 Encoding: UTF-8
 LazyData: true
 Imports: purrr,
-         S4Level2,
+         S4Level2 (>= 1.5.1),
          viridis,
          zoo,
 Depends: data.table,

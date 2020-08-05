@@ -1,7 +1,8 @@
 ########################################################################################################################
-plot <- "Altensteig"
-sub_plot <- "Buche"
-data_table <- loadCorrectedAndRawData(plot, sub_plot)
+plot_name <- "Altensteig"
+sub_plot_name <- "Buche"
+data_table <- loadCorrectedAndRawData(level2_path, plot_name, sub_plot_name) %>%
+
 
 
 ########################################################################################################################
@@ -10,16 +11,10 @@ data_table <- loadCorrectedAndRawData(plot, sub_plot)
 
 ########################################################################################################################
 # Create Graphs and manually fix data from them
-raw_graph_path <- file.path(getwd(), "Graphs", plot, sub_plot)
 #createRawGraphs(as.data.table(data_table), raw_graph_path)
 #createCombiGraphs(as.data.table(data_table), raw_graph_path)
 
-
-# Drop positions
-data_table <- data_table %>%
-    mutate(variable = str_match(variable, pattern = "[0-9]{2}"))
-
-out_path <- file.path(raw_graph_path, "..", "..")
+out_path <- file.path("graphs", plot_name, sub_plot_name)
 createCompletePlot(data_table,
     selected_variable = "15",
     target_years = target_years,
