@@ -1,6 +1,6 @@
 ########################################################################################################################
 level2_path <- "/home/polarfalke/Data/Temp/level2_3"
-target_years = c(2018, 2019)
+target_years = c(2019, 2020)
 global_limits = c(5, 41)
 moving_average = 10
 global_file_type = "png"

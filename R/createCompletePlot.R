@@ -8,9 +8,12 @@ createCompletePlot <- function(
     file_extension = "png",
     moving_average = NULL) {
 
+    data <- data  %>%
+        mutate(variable = stringr::str_match(as.character(variable), "[0-9]{2}")) %>%
+        filter(variable == selected_variable)
+
     previous_mean_sd <- data %>%
         filter(lubridate::year(Datum) < min(target_years)) %>%
-        filter(variable == selected_variable) %>%
         data.table() %>%
         createMeanSdTable(moving_average = moving_average)
 
@@ -20,7 +23,6 @@ createCompletePlot <- function(
     sub_plot_name <- data %>%
         pull(SubPlot) %>%
         unique()
-
     min_year <- data %>%
         pull(Datum) %>%
         year() %>%
@@ -34,30 +36,37 @@ createCompletePlot <- function(
         legend_label = mean_label,
         limits = limits)
 
-
     colours <- c("#000000", "#C0C0C0", viridis::inferno(length(target_years), begin = 0.9, end = 0.5))
     names(colours) <- c(mean_label, "Standardabweichung", target_years)
     mean_plot <- addColourScheme(mean_plot, colours)
 
-
     # Loop does not seem possible as the color of all single years is overwriten by the last one
-    target_mean_sd <- data %>%
-        filter(lubridate::year(Datum) == target_years[1]) %>%
-        filter(variable == selected_variable) %>%
-        data.table() %>%
-        createMeanSdTable(moving_average = moving_average)
-    mean_plot <- addSingleYear(mean_plot, target_mean_sd, as.character(target_years[1]))
+    target_mean <- data %>%
+        filter(lubridate::year(Datum) %in% target_years) %>%
+        mutate(Datum = as.Date(Datum)) %>%
+        group_by(Datum, variable) %>%
+        summarise(mean_value = mean(value, na.rm = TRUE))
 
-    target_mean_sd <- data %>%
-        filter(year(Datum) == target_years[2]) %>%
-        filter(variable == selected_variable) %>%
-        data.table() %>%
-        createMeanSdTable(moving_average = moving_average)
-    mean_plot <- addSingleYear(mean_plot, target_mean_sd, as.character(target_years[2]))
+    if (is.numeric(moving_average)) {
+        target_mean <- target_mean %>%
+            group_by(variable) %>%
+            mutate(mean_value = zoo::rollapply(mean_value, width = moving_average, FUN = mean, na.rm = TRUE, partial = TRUE))
+    }
+
+    mean_plot <- target_mean %>%
+        filter(lubridate::year(Datum) == target_years[1]) %>%
+        mutate(Datum = lubridate::yday(Datum)) %>%
+        addSingleYear(mean_plot, ., as.character(target_years[1]))
+
+    mean_plot <- target_mean %>%
+        filter(lubridate::year(Datum) == target_years[2]) %>%
+        mutate(Datum = lubridate::yday(Datum)) %>%
+        addSingleYear(mean_plot, ., as.character(target_years[2]))
 
     final_plot <- mean_plot +
         theme(legend.position = "right")
 
+    dir.create(out_path, showWarnings = FALSE, recursive = TRUE)
     out_file <- paste(plot_name, sub_plot_name, selected_variable, "cm", paste(target_years, collapse = "_"), sep = "_")
-    ggsave(paste0(out_path, "/", out_file, ".", file_extension), final_plot)
+    ggsave(filename = paste0(out_path, "/", out_file, ".", file_extension), plot = final_plot)
 }

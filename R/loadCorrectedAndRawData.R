@@ -5,7 +5,8 @@ loadCorrectedAndRawData <- function(level2_path, plot_name, sub_plot_name) {
     al_corrected_data <- level2_plot %>%
         S4Level2::loadCorrectedData(sub_plot_name) %>%
         filter(stringr::str_detect(variable, "^[0-9]{2}_FDR")) %>%
-        filter(!is.na(value))
+        filter(!is.na(value)) %>%
+        mutate(Plot = plot_name)
 
     max_corrected_datum <- al_corrected_data %>%
         summarise(max = max(Datum)) %>%
@@ -17,6 +18,5 @@ loadCorrectedAndRawData <- function(level2_path, plot_name, sub_plot_name) {
         filter(stringr::str_detect(variable, "^[0-9]{2}_FDR")) %>%
         filter(!is.na(value))
 
-    rbindlist(list(al_corrected_data, raw_data), use.names = TRUE, fill = TRUE) %>%
-        mutate(variable = stringr::str_match(as.character(variable), "[0-9]{2}"))
+    rbindlist(list(al_corrected_data, raw_data), use.names = TRUE, fill = TRUE)
 }

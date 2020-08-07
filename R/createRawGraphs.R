@@ -1,6 +1,6 @@
 ########################################################################################################################
 createRawGraphs <- function(long.table, out.path) {
-    dir.create(out.path, showWarnings = FALSE)
+    dir.create(out.path, showWarnings = FALSE, recursive = TRUE)
     for (year in long.table[, unique(year(Datum))]) {
         for (var.name in long.table[, unique(variable)]) {
             p <- ggplot(long.table[year(Datum) == year & variable == var.name], aes(x = Datum, y = value)) +
