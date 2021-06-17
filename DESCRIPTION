@@ -1,11 +1,13 @@
 Package: BodenfeuchteGraphen
 Type: Package
-Title: What the Package Does (Title Case)
+Title: Plotting of specific soil humidity data of the FVA
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Lars Isenberg  
+Maintainer: Lars Isenberg <lars.isenberg@forst.bwl.de>
+Description: This package is only intended for specific data of the FVA to create
+    comparison plots between a current year and aggregated previous years. 
+    Use four spaces when indenting paragraphs within the Description. It will only
+    work togther with other custom packages of mine and only in the correct environment.
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
