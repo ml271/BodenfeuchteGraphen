@@ -3,7 +3,6 @@ createCompletePlot <- function(
     data,
     selected_variable,
     target_years,
-    out_path,
     limits = NULL,
     file_extension = "png",
     moving_average = NULL) {
@@ -65,8 +64,5 @@ createCompletePlot <- function(
 
     final_plot <- mean_plot +
         theme(legend.position = "right")
-
-    dir.create(out_path, showWarnings = FALSE, recursive = TRUE)
-    out_file <- paste(plot_name, sub_plot_name, selected_variable, "cm", paste(target_years, collapse = "_"), sep = "_")
-    ggsave(filename = paste0(out_path, "/", out_file, ".", file_extension), plot = final_plot)
+    return(final_plot)
 }
