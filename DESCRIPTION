@@ -1,7 +1,7 @@
 Package: BodenfeuchteGraphen
 Type: Package
 Title: Plotting of specific soil humidity data of the FVA
-Version: 0.1.0
+Version: 0.1.1
 Author: Lars Isenberg  
 Maintainer: Lars Isenberg <lars.isenberg@forst.bwl.de>
 Description: This package is only intended for specific data of the FVA to create
@@ -19,3 +19,4 @@ Imports: purrr,
 Depends: data.table,
          dplyr,
          ggplot2
+RoxygenNote: 7.1.1
