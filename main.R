@@ -1,5 +1,12 @@
+S4Level2::initializeDataLocation("W:/Data")
+S4Level2::initializeWithPresetPlots()
+S4Level2::updateDatabase()
+
+
+
 ########################################################################################################################
-level2_path <- "/home/polarfalke/Data/Temp/level2_0"
+# level2_path <- "/home/polarfalke/Data/Temp/level2_0"
+level2_path <- "W:/Data"
 target_years = c(2019, 2020)
 global_limits = c(5, 41)
 moving_average = 10
