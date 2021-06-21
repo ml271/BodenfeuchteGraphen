@@ -1,3 +1,5 @@
+library(MyUtilities) #add this in newdata branch
+
 S4Level2::initializeDataLocation("W:/Data")
 S4Level2::initializeWithPresetPlots()
 S4Level2::updateDatabase()
