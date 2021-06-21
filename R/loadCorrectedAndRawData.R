@@ -1,5 +1,5 @@
 ########################################################################################################################
-loadCorrectedAndRawData <- function(level2_path, plot_name, sub_plot_name) {
+loadCorrectedAndRawData <- function(plot_name, sub_plot_name) {
     al_corrected_data <- S4Level2::loadCorrectedData(plot_name, sub_plot_name) %>%
         filter(stringr::str_detect(variable, "^[0-9]{2}_FDR")) %>%
         filter(!is.na(value)) %>%

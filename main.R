@@ -5,8 +5,6 @@ S4Level2::updateDatabase()
 
 
 ########################################################################################################################
-# level2_path <- "/home/polarfalke/Data/Temp/level2_0"
-level2_path <- "W:/Data"
 target_years = c(2019, 2020)
 global_limits = c(5, 41)
 moving_average = 10
@@ -22,7 +20,7 @@ global_file_type = "png"
 
 plot_name <- "Altensteig"
 sub_plot_name <- "Fichte"
-data_table <- loadCorrectedAndRawData(level2_path, plot_name, sub_plot_name)
+data_table <- loadCorrectedAndRawData(plot_name, sub_plot_name)
 
 filtered_data <- data_table %>%
     filter(!(Datum >= as.POSIXct("2020-01-01", tz = "UTC")
