@@ -39,7 +39,6 @@ createCompletePlot <- function(
     names(colours) <- c(mean_label, "Standardabweichung", target_years)
     mean_plot <- addColourScheme(mean_plot, colours)
 
-    # Loop does not seem possible as the color of all single years is overwriten by the last one
     target_mean <- data %>%
         filter(lubridate::year(Datum) %in% target_years) %>%
         mutate(Datum = as.Date(Datum)) %>%
@@ -52,6 +51,7 @@ createCompletePlot <- function(
             mutate(mean_value = zoo::rollapply(mean_value, width = moving_average, FUN = mean, na.rm = TRUE, partial = TRUE))
     }
 
+    # Loop does not seem possible as the color of all single years is overwriten by the last one
     mean_plot <- target_mean %>%
         filter(lubridate::year(Datum) == target_years[1]) %>%
         mutate(Datum = lubridate::yday(Datum)) %>%
