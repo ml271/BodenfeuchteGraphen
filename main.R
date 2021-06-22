@@ -1,7 +1,10 @@
-S4Level2::initializeDataLocation("W:/Data")
-S4Level2::initializeWithPresetPlots()
-S4Level2::updateDatabase()
+devtools::load_all() # Load all packages and functions of this package for main.R
 
+# Following functions only need to be used once to initialize S4Level2 package
+# S4Level2::initializeDataLocation("W:/Data")
+# S4Level2::initializeWithPresetPlots()
+
+S4Level2::updateDatabase() # Run if there is new Data
 
 
 ########################################################################################################################
@@ -11,8 +14,6 @@ moving_average = 10
 global_file_type = "png"
 
 # TODO: Replace the following sourced scripts with general functions derived from below to aggregate Plots together
-# TODO: Improve coloring by using the one from the funtions
-# TODO: Improve the legend
 # system.file("extdata", package = "BodenfeuchteGraphen") %>%
 #     dir(full.names = TRUE) %>%
 #     purrr::walk(~ source(.x))
