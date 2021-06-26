@@ -1,10 +1,8 @@
 devtools::load_all() # Load all packages and functions of this package for main.R
-
-# Following functions only need to be used once to initialize S4Level2 package
-# S4Level2::initializeDataLocation("W:/Data")
-# S4Level2::initializeWithPresetPlots()
-
-S4Level2::updateDatabase() # Run if there is new Data
+# Initializing and updating S4Level2 needs to be done from S4Level2 itself as using it as a package does not seem to
+# work as intended
+S4Level2::connectToExistingDataLocation("W:/Data")
+# x <- S4Level2::getData("2018-01-01", "2018-02-01", "Conventwald", "Freiland")
 
 
 ########################################################################################################################
