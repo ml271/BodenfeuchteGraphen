@@ -1,4 +1,7 @@
-devtools::load_all() # Load all packages and functions of this package for main.R
+devtools::load_all()
+devtools::load_all("W:/R/S4Level2")
+devtools::load_all("W:/R/MyUtilities")
+devtools::load_all("W:/R/LoggerImports")# Load all packages and functions of this package for main.R
 # Initializing and updating S4Level2 needs to be done from S4Level2 itself as using it as a package does not seem to
 # work as intended
 S4Level2::connectToExistingDataLocation("W:/Data")
@@ -6,7 +9,7 @@ S4Level2::connectToExistingDataLocation("W:/Data")
 
 
 ########################################################################################################################
-target_years = c(2019, 2020)
+target_years = c(2020, 2021)
 global_limits = c(5, 41)
 moving_average = 10
 global_file_type = "png"
@@ -17,18 +20,18 @@ global_file_type = "png"
 #     purrr::walk(~ source(.x))
 
 
-plot_name <- "Altensteig"
+plot_name <- "Esslingen"
 sub_plot_name <- "Fichte"
-data_table <- loadCorrectedAndRawData(plot_name, sub_plot_name)
+data_table <- loadCorrectedData(plot_name, sub_plot_name)
+data_table %>% distinct(variable) %>% print(n=100)
 
-filtered_data <- data_table %>%
-    filter(!(Datum >= as.POSIXct("2020-01-01", tz = "UTC")
-             & variable == "60_FDR_Y"))
-# al_15_plot <- createCompletePlot(filtered_data, "15", target_years, global_limits, moving_average = moving_average)
-# al_30_plot <- createCompletePlot(filtered_data, "30", target_years, global_limits, moving_average = moving_average)
-# al_60_plot <- createCompletePlot(filtered_data, "60", target_years, global_limits, moving_average = moving_average)
-#
-# ggplot(data = filtered_data, mapping = aes(x = Datum))
+    filter(Datum >= as.POSIXct("2018-01-01", tz = "UTC")
+             & variable == "60_FDR_Y")
+al_15_plot <- createCompletePlot(filtered_data, "15", target_years, global_limits, moving_average = moving_average)
+al_30_plot <- createCompletePlot(filtered_data, "30", target_years, global_limits, moving_average = moving_average)
+al_60_plot <- createCompletePlot(filtered_data, "60", target_years, global_limits, moving_average = moving_average)
+
+ggplot(data = filtered_data, mapping = aes(x = Datum))
 
 
 al_full_data <- filtered_data %>%
