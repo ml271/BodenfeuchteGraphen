@@ -1,9 +1,9 @@
 ########################################################################################################################
-mean_data = one_var
-plot_name = "ALTENSCHEISS"
-sub_plot_name = "FICHTE"
-limits = c(0, 30)
-expand = waiver()
+# mean_data = one_var
+# plot_name = "ALTENSCHEISS"
+# sub_plot_name = "FICHTE"
+# limits = c(0, 30)
+# expand = waiver()
 
 
 
