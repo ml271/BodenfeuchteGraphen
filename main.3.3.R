@@ -12,7 +12,7 @@ devtools::load_all("W:/R/LoggerImports")# Load all packages and functions of thi
 
 ############### LODING DATA #####################
 S4Level2::connectToExistingDataLocation("W:/Data")
-load("W:/R/Datamanagement/my2021data.Rdata")
+load("./data/my2021data.Rdata")
 dat_list = mget(ls(pattern = "2021"))
 rm(list = ls(pattern= "2021"))
 all_2021 <- rbindlist(dat_list)
@@ -33,23 +33,48 @@ tmp1 <- qu_cont(tmp)
 
 agg_date_clean <- agg_daily(df = tmp1, na.ratio = 0.5)
 
+#### Current Year ####
 current <- agg_date_clean %>%  filter( lubridate::year(Datum)== year) %>%
-    mutate( Datum = lubridate::yday(Datum)) %>%
-    filter(Datum != 366) %>%
+    #mutate( Datum = lubridate::yday(Datum)) %>%
+    #filter(Datum != 366) %>%
     mutate(type = as.character(year))
 
-plot_name <- current %>% select(Plot) %>% unique(.) %>%  pull() %>% as.character()
-subplot_name <- current %>% select(SubPlot) %>% unique(.) %>%  pull() %>% as.character()
+ggplot(data = current) + geom_line(mapping = aes(x = Datum, y= value, col= variable))
+#plot_name <- current %>% select(Plot) %>% unique(.) %>%  pull() %>% as.character()
+#subplot_name <- current %>% select(SubPlot) %>% unique(.) %>%  pull() %>% as.character()
+
+#### Old data for means ###
+old_tab <- as.data.table(agg_date_clean) %>%
+    filter(lubridate::year(Datum) < 2021)
+ggplot(data = old_tab) + geom_line(mapping = aes(x = Datum, y= value, col= variable))
+
+#### single var  each Year ####
+old_sub <- agg_date_clean %>%
+    #filter(variable == "30") %>%
+    mutate(year = lubridate::year(Datum)) %>%
+    filter(year >= "2010" & year < "2021") %>%
+    mutate(year = as.factor(year)) %>%
+    mutate(day = lubridate::yday(Datum))
+
+ggplot(data = old_sub)+ geom_line(aes(x= day, y= value, col = year))+
+    ylim(0,45)+
+    facet_wrap(facets = ~ variable, nrow = 3)
 
 
-ggplot(data = dat_2021) + geom_line(mapping = aes(x = Datum, y= value, col= variable))
 
-meansd_tab <- agg_date_clean %>%  filter( lubridate::year(Datum) <= year) %>%
+meansd_tab <- old_sub %>%
+    filter( Datum >= "2013-01-02") %>%
     #apply moving average and create mean sd table
-    BodenfeuchteGraphen::createMeanSdTable(. , moving_average = 10) %>% ungroup() %>%
+    BodenfeuchteGraphen::createMeanSdTable(. , moving_average = 1) %>% ungroup() %>%
     mutate(value = mean_value) %>%
     #select(-mean_value) %>%
     mutate(type = "Aggregate")
+
+ggplot(data = meansd_tab, aes(x= Datum)) +
+    geom_ribbon(mapping = aes( ymax = value + sd_value, ymin= value -sd_value, fill = variable))+
+    ylim(5,45) + facet_wrap(facets = ~ variable, nrow = 3)
+
+
 #-----
 join_dat <- meansd_tab %>%  bind_rows( current)
 #-------

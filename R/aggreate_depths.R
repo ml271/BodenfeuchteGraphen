@@ -6,7 +6,7 @@ agg_daily <- function(df, na.ratio) # and dropping varibales when containing mor
     # Aggregate Data by for each singel day if for each day the data has at least 50% non-na-values
     agg_date <- df %>%
         #aggregate daily values if day more than 50% of data
-        mutate(Datum = date(Datum)) %>%
+        mutate(Datum =  lubridate::date(Datum)) %>%
         group_by(Datum,Plot, SubPlot, variable) %>%
         summarise(
             ratio=sum(is.na(value))/n(),
