@@ -1,11 +1,6 @@
 devtools::load_all() # Load all packages and functions of this package for main.R
-# Initializing and updating S4Level2 needs to be done from S4Level2 itself as using it as a package does not seem to
-# work as intended
-S4Level2::connectToExistingDataLocation("W:/Data")
-# x <- S4Level2::getData("2018-01-01", "2018-02-01", "Conventwald", "Freiland")
 
 
-########################################################################################################################
 target_years = c(2019, 2020)
 global_limits = c(5, 41)
 moving_average = 10
@@ -37,32 +32,44 @@ al_full_data <- filtered_data %>%
     mutate(variable = as.factor(stringr::str_match(variable, "[0-9]{2}"))) %>%
     na.omit()
 
+# FUll DATA
 al_aggregate <- al_full_data %>%
     filter(Datum < as.Date(paste0(target_years[1], "-01-01"))) %>%
     mutate(Datum = lubridate::yday(Datum)) %>%
     filter(Datum != 366) %>%
     group_by(variable, Datum) %>%
     summarise(sd_value = sd(value), value = mean(value)) %>%
-    mutate_at(vars(value, sd_value), zoo::rollapply, width = moving_average, FUN = mean, na.rm = TRUE, partial = TRUE) %>%
+    mutate_at(vars(value, sd_value),
+              zoo::rollapply,
+              width = moving_average,
+              FUN = mean,
+              na.rm = TRUE,
+              partial = TRUE) %>%
     mutate(type = "Aggregate") %>%
     ungroup()
 
 al_polygon <- al_aggregate %>%
     group_by(variable) %>%
     group_map(~ {
-        MyUtilities::createSdPolygon(.x$Datum, .x$value, .x$sd_value) %>%
+        create_sd_polygon(.x$Datum, .x$value, .x$sd_value) %>%
             mutate(variable = unique(.x$variable)) %>%
             select(variable, Datum = x, value = y)
     }, keep = TRUE) %>%
     bind_rows() %>%
     mutate(type = "Polygon")
 
+# FULL DATA
 al_current <- al_full_data %>%
     filter(lubridate::year(Datum) %in% target_years) %>%
     mutate(Jahr = lubridate::year(Datum)) %>%
     group_by(variable, Datum) %>%
     summarise(value = mean(value)) %>%
-    mutate_at(vars(value), zoo::rollapply, width = moving_average, FUN = mean, na.rm = TRUE, partial = TRUE) %>%
+    mutate_at(vars(value),
+              zoo::rollapply,
+              width = moving_average,
+              FUN = mean,
+              na.rm = TRUE,
+              partial = TRUE) %>%
     mutate(type = as.character(lubridate::year(Datum))) %>%
     mutate(Datum = lubridate::yday(Datum)) %>%
     ungroup()
@@ -71,7 +78,8 @@ al_current <- al_full_data %>%
 joined_data <- al_aggregate %>%
     select(-sd_value) %>%
     bind_rows(al_polygon, al_current) %>%
-    mutate(type = factor(type, levels = c("Polygon", "Aggregate", "2019", "2020")))
+    mutate(type = factor(type,
+                         levels = c("Polygon", "Aggregate", "2019", "2020")))
 
 ggplot(data = joined_data, mapping = aes(x = Datum, y = value)) +
     geom_line(aes(color = type)) +

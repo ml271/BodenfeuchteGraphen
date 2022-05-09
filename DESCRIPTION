@@ -11,8 +11,7 @@ Description: This package is only intended for specific data of the FVA to creat
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
-Imports: MyUtilities (>= 5.1.0),
-         lubridate,
+Imports: lubridate,
          stringr,
          purrr,
          assertthat,
@@ -21,5 +20,4 @@ Imports: MyUtilities (>= 5.1.0),
 Depends: data.table,
          dplyr,
          ggplot2
-Suggests: S4Level2 (>= 6.0.0)
 RoxygenNote: 7.1.1

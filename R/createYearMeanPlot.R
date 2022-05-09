@@ -27,7 +27,7 @@ createYearMeanPlot <- function(
         ggtitle(title.string, subtitle = subtitle_string) +
         scale_y_continuous(name = "Bodenfeuchte (Vol.-%)", limits = limits, expand = expansion(0.01))
 
-    sd_polygon <- MyUtilities::createSdPolygon(mean_data$Datum, mean_data$mean_value, mean_data$sd_value)
+    sd_polygon <- create_sd_polygon(mean_data$Datum, mean_data$mean_value, mean_data$sd_value)
     p.prev <- base.plot +
         geom_polygon(data = sd_polygon, mapping = aes(x = x, y = y, fill = "Standardabweichung")) +
         geom_line(data = mean_data,
